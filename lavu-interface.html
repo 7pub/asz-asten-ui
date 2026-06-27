@@ -561,8 +561,8 @@
             if (basket.length === 0) {
                 labelItemsEl.textContent = '— keine Fracht —';
             } else {
-                // Vertausche desc und container: zuerst container, dann desc
-                const lines = basket.map(m => `${m.code} · ${m.container} · ${m.desc}`).join('\n');
+                // Format: code · container · desc (Beschreibung in neuer Zeile)
+                const lines = basket.map(m => `${m.code} · ${m.container}\n${m.desc}`).join('\n');
                 labelItemsEl.textContent = lines;
             }
         }
@@ -600,14 +600,14 @@
         // ----- search -----
         searchInput.addEventListener('input', renderMaterialList);
 
-        // ----- PRINT label (rechtsbündig, desc und container vertauscht) -----
+        // ----- PRINT label (rechtsbündig, Beschreibung in neuer Zeile) -----
         document.getElementById('printLabelBtn').addEventListener('click', function() {
             let itemLines = '';
             if (basket.length === 0) {
                 itemLines = 'Keine Fracht';
             } else {
-                // Vertausche desc und container: container zuerst
-                itemLines = basket.map(m => `${m.code} · ${m.container} · ${m.desc}`).join('\n');
+                // Format: code · container (neue Zeile) desc
+                itemLines = basket.map(m => `${m.code} · ${m.container}\n${m.desc}`).join('\n');
             }
             const siteLine = 'ASZ Asten · Standort 106';
 
