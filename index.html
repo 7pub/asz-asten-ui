@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASZ Asten - Material Management</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+            --primary: #3498db;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
+        h1 { font-size: 24px; color: #2c3e50; }
+        
+        .view-toggle { background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        /* App Layouts */
+        .container { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media(min-width: 900px) {
+            .office-layout { grid-template-columns: 2fr 1fr; }
+        }
+
+        /* Floor Terminal Grid */
+        .terminal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .material-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .material-title { font-size: 20px; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        /* Status Controls */
+        .status-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+        .btn-status { flex: 1; padding: 12px 5px; border: 2px solid var(--border-color); border-radius: 6px; background: white; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        
+        .btn-status.empty.active { background: var(--success); color: white; border-color: var(--success); }
+        .btn-status.warning.active { background: var(--warning); color: #333; border-color: var(--warning); }
+        .btn-status.full.active { background: var(--danger); color: white; border-color: var(--danger); }
+
+        .btn-log { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .btn-log:active { transform: scale(0.98); }
+
+        /* Office Dashboard Elements */
+        .office-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .status-monitor-card { background: var(--card-bg); padding: 15px; border-radius: 8px; border-left: 8px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .status-monitor-card.status-empty { border-left-color: var(--success); }
+        .status-monitor-card.status-warning { border-left-color: var(--warning); }
+        .status-monitor-card.status-full { border-left-color: var(--danger); animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        .sidebar { background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); max-height: 600px; overflow-y: auto; }
+        .log-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        .log-time { color: #7f8c8d; font-weight: bold; margin-right: 8px; }
+
+        .export-btn { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 id="app-title">ASZ Asten - Platz-Terminal</h1>
+        <button class="view-toggle" id="viewToggle" onclick="toggleView()">Ansicht wechseln (Büro PC)</button>
+    </header>
+
+    <div id="floor-view" class="container">
+        <div class="terminal-grid" id="terminal-container"></div>
+    </div>
+
+    <div id="office-view" class="container office-layout hidden">
+        <div>
+            <h2 style="margin-bottom: 15px;">Live Container Status</h2>
+            <div class="office-grid" id="office-monitor-container"></div>
+        </div>
+        <div class="sidebar">
+            <h2>Aktivitätsprotokoll</h2>
+            <button class="export-btn" onclick="exportToCSV()">Protokoll als CSV exportieren</button>
+            <div id="log-container" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Core Data Structure
+        const categories = [
+            { id: 'altholz', name: '🪵 Altholz', status: 'empty' },
+            { id: 'elektro', name: '🖥️ Elektroaltgeräte', status: 'empty' },
+            { id: 'bauschutt', name: '🪟 Bauschutt', status: 'empty' },
+            { id: 'problemstoffe', name: '🛢️ Problemstoffe', status: 'empty' },
+            { id: 'karton', name: '📦 Kartonagen / Papier', status: 'empty' },
+            { id: 'reifen', name: '🛞 Altreifen', status: 'empty' },
+            { id: 'sperrmuell', name: '🗑️ Sperrmüll', status: 'empty' }
+        ];
+
+        let state = JSON.parse(localStorage.getItem('asz_state')) || { categories: categories, logs: [] };
+        let currentView = 'floor';
+
+        function saveData() {
+            localStorage.setItem('asz_state', JSON.stringify(state));
+            // Trigger storage event manually for same-page multi-tab updates
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // UI View Switcher
+        function toggleView() {
+            const floorView = document.getElementById('floor-view');
+            const officeView = document.getElementById('office-view');
+            const btn = document.getElementById('viewToggle');
+            const title = document.getElementById('app-title');
+
+            if (currentView === 'floor') {
+                floorView.classList.add('hidden');
+                officeView.classList.remove('hidden');
+                btn.innerText = "Ansicht wechseln (Terminal)";
+                title.innerText = "ASZ Asten - Büro Dashboard";
+                currentView = 'office';
+                renderOffice();
+            } else {
+                officeView.classList.add('hidden');
+                floorView.classList.remove('hidden');
+                btn.innerText = "Ansicht wechseln (Büro PC)";
+                title.innerText = "ASZ Asten - Platz-Terminal";
+                currentView = 'floor';
+                renderTerminal();
+            }
+        }
+
+        // Render Floor Terminal
+        function renderTerminal() {
+            const container = document.getElementById('terminal-container');
+            container.innerHTML = '';
+
+            state.categories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'material-card';
+                card.innerHTML = `
+                    <div class="material-title">${cat.name}</div>
+                    <div>
+                        <div class="status-buttons">
+                            <button class="btn-status empty ${cat.status === 'empty' ? 'active' : ''}" onclick="setStatus('${cat.id}', 'empty')">Leer</button>
+                            <button class="btn-status warning ${cat.status === 'warning' ? 'active' : ''}" onclick="setStatus('${cat.id}', 'warning')">75%</button>
+                            <button class="btn-status full ${cat.status === 'full' ? 'active' : ''}" onclick="setStatus('${cat.id}', 'full')">Voll</button>
+                        </div>
+                        <button class="btn-log" onclick="logAction('${cat.id}', 'Einwurf registriert')">+ Einwurf Einloggen</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render Office Dashboard
+        function renderOffice() {
+            const monitorContainer = document.getElementById('office-monitor-container');
+            monitorContainer.innerHTML = '';
+
+            state.categories.forEach(cat => {
+                const statusText = cat.status === 'empty' ? 'Bereit / Leer' : cat.status === 'warning' ? '75% Voll' : 'KRITISCH (Voll)';
+                const card = document.createElement('div');
+                card.className = `status-monitor-card status-${cat.status}`;
+                card.innerHTML = `
+                    <h3 style="font-size: 16px;">${cat.name}</h3>
+                    <p style="margin-top: 8px; font-weight: bold; font-size: 14px;">Status: ${statusText}</p>
+                `;
+                monitorContainer.appendChild(card);
+            });
+
+            const logContainer = document.getElementById('log-container');
+            logContainer.innerHTML = '';
+            [...state.logs].reverse().forEach(log => {
+                const div = document.createElement('div');
+                div.className = 'log-item';
+                div.innerHTML = `<span class="log-time">${log.time}</span> <strong>${log.category}</strong>: ${log.action}`;
+                logContainer.appendChild(div);
+            });
+        }
+
+        // Actions
+        function setStatus(id, targetStatus) {
+            const cat = state.categories.find(c => c.id === id);
+            if (cat.status !== targetStatus) {
+                cat.status = targetStatus;
+                logAction(id, `Status geändert auf [${targetStatus.toUpperCase()}]`);
+                saveData();
+                renderTerminal();
+            }
+        }
+
+        function logAction(id, actionText) {
+            const cat = state.categories.find(c => c.id === id);
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            state.logs.push({
+                time: timeString,
+                category: cat.name,
+                action: actionText
+            });
+
+            // Keep log size reasonable
+            if(state.logs.length > 200) state.logs.shift();
+
+            saveData();
+            if (currentView === 'office') renderOffice();
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Zeit,Kategorie,Aktion\n";
+            state.logs.forEach(log => {
+                csvContent += `"${log.time}","${log.category}","${log.action}"\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `ASZ_Asten_Log_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Listen for storage changes across different tabs/windows
+        window.addEventListener('storage', () => {
+            state = JSON.parse(localStorage.getItem('asz_state')) || { categories: categories, logs: [] };
+            if (currentView === 'floor') renderTerminal();
+            if (currentView === 'office') renderOffice();
+        });
+
+        // Initial Boot
+        renderTerminal();
+    </script>
+</body>
+</html>
