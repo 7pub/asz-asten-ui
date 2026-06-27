@@ -1,0 +1,22 @@
+# Betriebssystem-spezifische Dateien
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs und Editoren
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Zukünftige Server-Erweiterungen (falls Node.js/Python genutzt wird)
+node_modules/
+__pycache__/
+*.log
+.env
+
+# Lokale Datenbanken (Sicherheitskopien/Live-Daten nicht mit-committen)
+*.db
+*.sqlite
