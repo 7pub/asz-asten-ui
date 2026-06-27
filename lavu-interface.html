@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ASZ Asten · Material- & Fracht-Management</title>
-    <!-- Font Awesome Icons -->
+    <title>ASZ Asten · Terminal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* ----- Terminal Style (Groß, Touch-optimiert) ----- */
         * {
             margin: 0;
             padding: 0;
@@ -14,316 +14,349 @@
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
         }
         body {
-            background: #eef2f5;
+            background: #0a1a24;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 24px;
+            padding: 16px;
         }
-        .card {
-            max-width: 1440px;
+        .terminal {
+            max-width: 1400px;
             width: 100%;
-            background: white;
-            border-radius: 36px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            overflow: hidden;
-            padding: 28px 30px 34px;
-            transition: all 0.2s;
+            background: #0f212e;
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
+            padding: 24px 28px 30px;
+            border: 1px solid #1f3a4a;
         }
-        .header {
+        /* Header */
+        .terminal-header {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #d0d9e3;
-            padding-bottom: 18px;
-            margin-bottom: 26px;
-            gap: 15px;
+            border-bottom: 2px solid #1f3a4a;
+            padding-bottom: 16px;
+            margin-bottom: 22px;
         }
-        .site-id {
+        .terminal-title {
             display: flex;
             align-items: baseline;
-            gap: 10px;
+            gap: 14px;
             flex-wrap: wrap;
         }
-        .site-id h1 {
-            font-weight: 600;
-            font-size: 1.8rem;
+        .terminal-title h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
             letter-spacing: -0.5px;
-            color: #0b2b3b;
+            color: #8bc1e0;
+            text-shadow: 0 0 20px rgba(80, 180, 255, 0.1);
         }
-        .site-id .badge {
-            background: #1e4b5c;
-            color: white;
-            padding: 6px 18px;
+        .terminal-title .badge {
+            background: #1f5d7a;
+            color: #cde5f5;
+            padding: 6px 22px;
             border-radius: 60px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.3px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid #3a7a9a;
         }
-        .print-btn {
+        .terminal-status {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .status-led {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #7aabca;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .status-led .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .report-btn {
             background: #1f5d7a;
             color: white;
             border: none;
-            padding: 10px 28px;
+            padding: 12px 32px;
             border-radius: 60px;
-            font-weight: 600;
-            font-size: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 4px 8px rgba(0,50,70,0.1);
+            border: 1px solid #3a8aaf;
+            box-shadow: 0 4px 15px rgba(31, 93, 122, 0.3);
         }
-        .print-btn:hover {
+        .report-btn:hover {
             background: #0f435c;
-            transform: scale(1.01);
-            box-shadow: 0 10px 18px -8px rgba(0,50,70,0.3);
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(31, 93, 122, 0.5);
         }
-        .container-grid {
+        .report-btn i {
+            font-size: 1.3rem;
+        }
+
+        /* Main Grid */
+        .terminal-grid {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            gap: 28px;
+            gap: 24px;
         }
+        /* Linke Seite: Materialauswahl (größer für Touch) */
         .material-panel {
-            flex: 2.2;
-            min-width: 420px;
-        }
-        .basket-panel {
-            flex: 1.3;
-            min-width: 300px;
-            background: #f7fafc;
-            border-radius: 24px;
-            padding: 22px 18px 18px;
-            border: 1px solid #dce4ed;
-            max-height: 780px;
-            display: flex;
-            flex-direction: column;
+            flex: 2.4;
+            min-width: 440px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 18px 18px 14px;
+            border: 1px solid #1f3a4a;
         }
         .filter-bar {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 18px;
-            background: #f4f8fd;
-            padding: 16px;
-            border-radius: 24px;
-            border: 1px solid #e1eaf4;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            margin-bottom: 16px;
+            background: rgba(255,255,255,0.04);
+            padding: 12px 18px;
+            border-radius: 60px;
+            border: 1px solid #1f3a4a;
         }
         .filter-bar input {
-            width: 100%;
+            flex: 2;
+            min-width: 180px;
             border: none;
-            background: white;
-            padding: 12px 18px;
+            background: rgba(255,255,255,0.08);
+            padding: 14px 20px;
             border-radius: 40px;
-            font-size: 1rem;
-            border: 1px solid #d4dee9;
+            font-size: 1.1rem;
+            color: #e0edf5;
+            border: 1px solid #2a4a5a;
+            transition: 0.15s;
         }
         .filter-bar input:focus {
-            border-color: #1f6d8a;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(28, 110, 150, 0.2);
+            border-color: #3a8aaf;
+            background: rgba(255,255,255,0.12);
+            box-shadow: 0 0 0 3px rgba(31, 93, 122, 0.2);
+        }
+        .filter-bar input::placeholder {
+            color: #5a7a8a;
         }
         .block-selector {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 6px 8px;
+            gap: 6px 10px;
         }
         .block-selector span {
             font-weight: 600;
-            color: #1f3d4e;
-            font-size: 0.9rem;
-            margin-right: 4px;
+            color: #7aabca;
+            font-size: 0.95rem;
         }
         .block-btn {
             background: transparent;
-            border: 1px solid #b8c9da;
-            padding: 6px 14px;
+            border: 1px solid #2a4a5a;
+            padding: 8px 18px;
             border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.8rem;
+            font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: 0.1s;
-            color: #1f4055;
-            background: white;
+            transition: 0.15s;
+            color: #8ab0c8;
         }
         .block-btn.active {
             background: #1f5d7a;
-            border-color: #1f5d7a;
+            border-color: #3a8aaf;
             color: white;
+            box-shadow: 0 0 15px rgba(31, 93, 122, 0.3);
         }
         .block-btn:hover {
-            background: #dbe6f0;
+            background: #1a3a4a;
         }
+        .block-btn.active:hover {
+            background: #174b63;
+        }
+
         .material-list {
-            max-height: 560px;
+            max-height: 440px;
             overflow-y: auto;
             padding-right: 4px;
+            margin-top: 6px;
         }
         .material-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 10px 10px 16px;
+            padding: 14px 16px 14px 22px;
             margin-bottom: 6px;
-            background: white;
+            background: rgba(255,255,255,0.05);
             border-radius: 60px;
-            border: 1px solid #e5ecf3;
-            transition: 0.1s;
+            border: 1px solid #1f3a4a;
+            transition: 0.15s;
+            cursor: default;
         }
         .material-item:hover {
-            background: #f2f8ff;
-            border-color: #b6ccdf;
+            background: rgba(255,255,255,0.08);
+            border-color: #2a5a6a;
         }
         .material-item .code {
             font-weight: 700;
-            color: #004466;
-            min-width: 55px;
-            font-family: monospace;
-            font-size: 1rem;
+            color: #7ac0e0;
+            min-width: 64px;
+            font-size: 1.2rem;
         }
         .material-item .desc {
             flex: 1;
-            margin: 0 10px 0 12px;
+            margin: 0 14px 0 8px;
             font-weight: 500;
-            color: #162b38;
-            font-size: 0.95rem;
-            line-height: 1.3;
+            color: #c8dce8;
+            font-size: 1.05rem;
         }
         .material-item .container-badge {
-            background: #e6edf6;
-            padding: 4px 14px;
+            background: rgba(31, 93, 122, 0.3);
+            padding: 4px 18px;
             border-radius: 50px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: #1f4c61;
+            color: #8ac0da;
+            border: 1px solid #2a5a6a;
             white-space: nowrap;
-            margin-right: 8px;
         }
         .add-btn {
-            background: #dce8f2;
-            border: none;
+            background: rgba(31, 93, 122, 0.3);
+            border: 1px solid #2a5a6a;
             border-radius: 40px;
-            padding: 8px 18px;
-            font-weight: 600;
-            color: #004466;
+            padding: 10px 24px;
+            font-weight: 700;
+            color: #8ac0da;
             cursor: pointer;
             transition: 0.15s;
-            font-size: 0.9rem;
+            font-size: 1rem;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 10px;
         }
         .add-btn:hover:not(:disabled) {
-            background: #b2cbdf;
-            color: #002b40;
+            background: rgba(31, 93, 122, 0.5);
+            border-color: #3a8aaf;
+            color: white;
+        }
+        .add-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .add-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Rechte Seite: Frachtliste + Karteikärtchen */
+        .basket-panel {
+            flex: 1.4;
+            min-width: 320px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 18px 18px 16px;
+            border: 1px solid #1f3a4a;
+            display: flex;
+            flex-direction: column;
         }
         .basket-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #d0dce9;
+            border-bottom: 2px solid #1f3a4a;
             padding-bottom: 12px;
             margin-bottom: 12px;
         }
         .basket-header h3 {
             font-weight: 600;
-            color: #1b3f52;
-            font-size: 1.1rem;
+            color: #8bc1e0;
+            font-size: 1.3rem;
         }
         .basket-header span {
             background: #1f5d7a;
             color: white;
             border-radius: 40px;
-            padding: 0 14px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            line-height: 28px;
+            padding: 0 18px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            line-height: 34px;
+            border: 1px solid #3a8aaf;
         }
         .basket-list {
             flex: 1;
             overflow-y: auto;
             margin: 6px 0 12px;
             padding-right: 6px;
-            max-height: 220px;
+            max-height: 160px;
         }
         .basket-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 6px 8px 14px;
-            background: white;
+            padding: 10px 8px 10px 16px;
+            background: rgba(255,255,255,0.05);
             border-radius: 40px;
-            margin-bottom: 6px;
-            border: 1px solid #dae2ec;
-            font-size: 0.85rem;
+            margin-bottom: 5px;
+            border: 1px solid #1f3a4a;
+            font-size: 0.95rem;
         }
         .basket-item .b-code {
             font-weight: 700;
-            color: #004466;
-            min-width: 45px;
-            font-family: monospace;
+            color: #7ac0e0;
+            min-width: 54px;
         }
         .basket-item .b-desc {
             flex: 1;
             margin: 0 10px;
             font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: #b8d0dc;
         }
         .basket-item .b-container {
-            background: #e0ecf5;
-            padding: 2px 10px;
+            background: rgba(31, 93, 122, 0.2);
+            padding: 2px 16px;
             border-radius: 30px;
             font-size: 0.75rem;
             font-weight: 600;
+            color: #8ac0da;
+            border: 1px solid #1f4a5a;
         }
         .remove-btn {
             background: none;
             border: none;
-            color: #a0b7cb;
+            color: #6a8a9a;
             cursor: pointer;
-            font-size: 1.1rem;
-            padding: 0 6px;
+            font-size: 1.3rem;
+            padding: 0 8px;
+            transition: 0.15s;
         }
         .remove-btn:hover {
-            color: #b22234;
-        }
-        .basket-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-            margin-top: 12px;
-        }
-        .basket-actions button {
-            background: transparent;
-            border: 1px solid #b6cada;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.1s;
-            background: white;
-            font-size: 0.9rem;
-        }
-        .basket-actions .clear-btn {
-            color: #6a3d3d;
-        }
-        .basket-actions .clear-btn:hover {
-            background: #ffe6e6;
-            border-color: #c27a7a;
+            color: #e06666;
         }
 
-        /* ----- Karteikärtchen Stack ----- */
+        /* Karteikärtchen Stack - Terminal Style */
         .card-stack-container {
             position: relative;
-            margin: 14px 0 6px;
-            height: 210px;
+            margin: 10px 0 6px;
+            height: 220px;
             perspective: 1000px;
             touch-action: pan-y;
             cursor: grab;
@@ -342,225 +375,318 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #fafcfd;
-            border: 2.5px solid #8ba6be;
+            background: #0f212e;
+            border: 2.5px solid #2a5a6a;
             border-radius: 18px;
-            padding: 18px 22px;
+            padding: 20px 24px;
             font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: #002b3f;
+            font-size: 0.95rem;
+            line-height: 2;
+            color: #c8dce8;
             text-align: right;
             transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease, box-shadow 0.3s ease;
             backface-visibility: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             justify-content: center;
             user-select: none;
+            -webkit-user-select: none;
+            will-change: transform;
         }
         .card-item.active {
             transform: translateX(0) scale(1) rotate(0deg);
             opacity: 1;
             z-index: 10;
-            box-shadow: 0 12px 35px rgba(0,43,63,0.2);
-            border-color: #1f5d7a;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(31, 93, 122, 0.15);
+            border-color: #3a8aaf;
         }
         .card-item.prev {
-            transform: translateX(-45px) scale(0.88) rotate(-3deg);
-            opacity: 0.4;
+            transform: translateX(-50px) scale(0.88) rotate(-3deg);
+            opacity: 0.3;
             z-index: 5;
+            filter: blur(0.5px);
         }
         .card-item.next {
-            transform: translateX(45px) scale(0.88) rotate(3deg);
-            opacity: 0.4;
+            transform: translateX(50px) scale(0.88) rotate(3deg);
+            opacity: 0.3;
             z-index: 5;
+            filter: blur(0.5px);
         }
         .card-item.hidden {
-            transform: translateX(80px) scale(0.8) rotate(5deg);
+            transform: translateX(90px) scale(0.8) rotate(5deg);
             opacity: 0;
             z-index: 0;
             pointer-events: none;
         }
         .card-item .card-site {
             font-weight: 700;
-            font-size: 1.1rem;
-            color: #003b57;
+            font-size: 1.2rem;
+            color: #8bc1e0;
             margin-bottom: 2px;
         }
         .card-item .card-code {
             font-weight: 700;
-            color: #004466;
-            font-size: 1.4rem;
+            color: #7ac0e0;
+            font-size: 1.5rem;
         }
         .card-item .card-container {
             font-weight: 600;
-            color: #1f4c61;
+            color: #8ac0da;
         }
         .card-item .card-desc {
-            font-size: 0.95rem;
-            margin-top: 4px;
+            font-size: 1rem;
         }
         .card-item .card-index {
             position: absolute;
-            top: 10px;
-            left: 16px;
-            font-size: 0.7rem;
-            color: #8ba6be;
+            top: 12px;
+            left: 18px;
+            font-size: 0.75rem;
+            color: #5a8a9a;
             font-weight: 600;
-            background: rgba(255,255,255,0.7);
-            padding: 2px 12px;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 14px;
             border-radius: 20px;
+            border: 1px solid #1f4a5a;
         }
         .card-item .card-select-hint {
             position: absolute;
-            bottom: 10px;
+            bottom: 12px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 0.6rem;
-            color: #8ba6be;
-            opacity: 0.6;
-            background: rgba(255,255,255,0.6);
-            padding: 2px 14px;
+            font-size: 0.65rem;
+            color: #5a8a9a;
+            opacity: 0.5;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 16px;
             border-radius: 20px;
             white-space: nowrap;
             pointer-events: none;
+            border: 1px solid #1f3a4a;
         }
+
+        .card-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+            padding: 4px 0;
+        }
+        .card-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #1f3a4a;
+            border: 1px solid #2a5a6a;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+        .card-dot.active {
+            background: #1f5d7a;
+            border-color: #3a8aaf;
+            transform: scale(1.3);
+            box-shadow: 0 0 20px rgba(31, 93, 122, 0.4);
+        }
+        .card-dot:hover:not(.active) {
+            background: #2a4a5a;
+            transform: scale(1.15);
+        }
+
         .card-nav {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 18px;
-            margin-top: 10px;
+            gap: 20px;
+            margin-top: 8px;
             padding: 4px 0;
         }
         .card-nav button {
-            background: #e6edf6;
-            border: none;
+            background: rgba(31, 93, 122, 0.2);
+            border: 1px solid #2a5a6a;
             border-radius: 40px;
-            padding: 6px 20px;
-            font-weight: 600;
-            color: #1f4c61;
+            padding: 10px 28px;
+            font-weight: 700;
+            color: #8ac0da;
             cursor: pointer;
             transition: 0.15s;
-            font-size: 0.9rem;
+            font-size: 1rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .card-nav button:hover:not(:disabled) {
-            background: #b2cbdf;
-            color: #002b40;
+            background: rgba(31, 93, 122, 0.4);
+            border-color: #3a8aaf;
+            color: white;
         }
         .card-nav button:disabled {
-            opacity: 0.3;
+            opacity: 0.25;
             cursor: not-allowed;
         }
         .card-nav .counter {
             font-weight: 700;
-            color: #1f4c61;
-            font-size: 0.95rem;
-            min-width: 60px;
+            color: #8ac0da;
+            font-size: 1.1rem;
+            min-width: 70px;
             text-align: center;
-            background: #eef4fa;
-            padding: 4px 12px;
+            background: rgba(0,0,0,0.2);
+            padding: 6px 16px;
             border-radius: 30px;
+            border: 1px solid #1f3a4a;
         }
+
         .card-empty {
             text-align: center;
-            color: #6a8aa0;
+            color: #5a8a9a;
             font-style: italic;
             padding: 30px 10px;
-            background: #fafcfd;
+            background: rgba(255,255,255,0.03);
             border-radius: 16px;
-            border: 2px dashed #8ba6be;
+            border: 2px dashed #1f3a4a;
             font-family: 'Courier New', monospace;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.1rem;
         }
-        .card-dots {
+
+        .basket-actions {
             display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 6px;
-            padding: 4px 0;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 8px;
         }
-        .card-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #d0dce9;
-            border: none;
-            padding: 0;
+        .basket-actions button {
+            background: transparent;
+            border: 1px solid #2a5a6a;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: 0.15s;
+            color: #8ab0c8;
+            font-size: 0.95rem;
         }
-        .card-dot.active {
-            background: #1f5d7a;
-            transform: scale(1.25);
+        .basket-actions .clear-btn {
+            color: #cc8888;
         }
+        .basket-actions .clear-btn:hover {
+            background: rgba(200, 80, 80, 0.15);
+            border-color: #aa5555;
+        }
+        .basket-actions .sample-btn {
+            border-color: #2a6a7a;
+            background: rgba(31, 93, 122, 0.15);
+            color: #8ac0da;
+        }
+        .basket-actions .sample-btn:hover {
+            background: rgba(31, 93, 122, 0.3);
+        }
+
         .footer-note {
             margin-top: 14px;
-            font-size: 0.75rem;
-            color: #4f6f83;
+            font-size: 0.8rem;
+            color: #4a6a7a;
             text-align: right;
-            border-top: 1px solid #d4e0ea;
+            border-top: 1px solid #1f3a4a;
             padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        @media (max-width: 900px) {
-            .card { padding: 18px; }
-            .container-grid { flex-direction: column; }
-            .material-panel { min-width: 0; }
+        .footer-note .office-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #5a8a9a;
+            font-size: 0.85rem;
         }
+        .footer-note .office-status i {
+            color: #2ecc71;
+        }
+
+        /* Scrollbar */
         .material-list::-webkit-scrollbar, .basket-list::-webkit-scrollbar {
-            width: 5px;
+            width: 6px;
         }
         .material-list::-webkit-scrollbar-thumb, .basket-list::-webkit-scrollbar-thumb {
-            background: #b6cada;
+            background: #1f3a4a;
             border-radius: 8px;
+        }
+        .material-list::-webkit-scrollbar-track, .basket-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        @media (max-width: 860px) {
+            .terminal { padding: 16px; }
+            .terminal-title h1 { font-size: 1.6rem; }
+            .material-panel { min-width: 0; }
+            .basket-panel { min-width: 0; }
+            .filter-bar input { font-size: 1rem; padding: 12px 16px; }
+            .material-item { padding: 12px 12px 12px 16px; flex-wrap: wrap; gap: 6px; }
+            .material-item .desc { font-size: 0.95rem; }
+            .card-item { padding: 14px 16px; font-size: 0.85rem; }
+            .report-btn { padding: 10px 20px; font-size: 0.95rem; }
+        }
+        @media (max-width: 480px) {
+            .terminal { padding: 10px; border-radius: 20px; }
+            .terminal-title h1 { font-size: 1.3rem; }
+            .block-btn { padding: 6px 12px; font-size: 0.75rem; }
+            .add-btn { padding: 8px 14px; font-size: 0.85rem; }
+            .card-nav button { padding: 8px 16px; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
-<div class="card" id="app">
-    <div class="header">
-        <div class="site-id">
-            <h1>ASZ Asten</h1>
-            <span class="badge"><i class="fas fa-map-pin"></i> Regionallager & Platz-Terminal 106</span>
+<div class="terminal" id="app">
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+        <div class="terminal-title">
+            <h1><i class="fas fa-terminal" style="color:#3a8aaf;margin-right:12px;"></i>ASZ Asten</h1>
+            <span class="badge"><i class="fas fa-map-pin"></i> Standort 106</span>
         </div>
-        <button class="print-btn" id="printLabelBtn"><i class="fas fa-print"></i> Alle Etiketten drucken</button>
+        <div class="terminal-status">
+            <div class="status-led">
+                <span class="dot"></span>
+                <span>Terminal aktiv</span>
+            </div>
+            <button class="report-btn" id="reportToOfficeBtn">
+                <i class="fas fa-desktop"></i> An Büro-PC senden
+            </button>
+        </div>
     </div>
 
-    <div class="container-grid">
-        <!-- LINKES PANEL: MATERIALIEN NACH BLÖCKEN -->
+    <!-- Main Grid -->
+    <div class="terminal-grid">
+        <!-- Materialauswahl -->
         <div class="material-panel">
             <div class="filter-bar">
-                <input type="text" id="materialSearch" placeholder="🔍 Schnellsuchleiste (z.B. 3510 oder Altholz) ...">
+                <input type="text" id="materialSearch" placeholder="🔍 Suchen (Code / Name) ...">
                 <div class="block-selector">
-                    <span>Block-Filter:</span>
+                    <span>Block:</span>
                     <button class="block-btn active" data-block="all">Alle</button>
                     <button class="block-btn" data-block="1000">1000</button>
                     <button class="block-btn" data-block="2000">2000</button>
                     <button class="block-btn" data-block="3000">3000</button>
                     <button class="block-btn" data-block="4000">4000</button>
-                    <button class="block-btn" data-block="4300">4300/4900</button>
+                    <button class="block-btn" data-block="4300">4300</button>
                     <button class="block-btn" data-block="9000">9000</button>
                 </div>
             </div>
             <div class="material-list" id="materialListContainer"></div>
         </div>
 
-        <!-- RECHTES PANEL: LIVE BÜRO-LOG & KARTEIKARTEN-STACK -->
+        <!-- Frachtliste + Karteikärtchen -->
         <div class="basket-panel">
             <div class="basket-header">
-                <h3><i class="fas fa-shopping-basket"></i> Aktuelle Frachtliste (Büro)</h3>
+                <h3><i class="fas fa-shopping-basket"></i> Frachtliste - Entsorgung</h3>
                 <span id="basketCount">0</span>
             </div>
             <div class="basket-list" id="basketListContainer"></div>
 
-            <!-- Karteikarten Live-Vorschau -->
             <div class="card-stack-container" id="cardStackContainer">
                 <div class="card-empty">Keine Karteikärtchen<br>Füge Materialien hinzu</div>
             </div>
@@ -574,11 +700,16 @@
             </div>
 
             <div class="basket-actions">
-                <button class="clear-btn" id="clearBasketBtn"><i class="fas fa-trash-alt"></i> Liste leeren</button>
-                <button id="addSampleBtn" style="border-color:#3b799b;background:#e5f0fa;"><i class="fas fa-plus-circle"></i> Demo-Mix</button>
+                <button class="clear-btn" id="clearBasketBtn"><i class="fas fa-trash-alt"></i> Leeren</button>
+                <button class="sample-btn" id="addSampleBtn"><i class="fas fa-plus-circle"></i> Beispiel</button>
             </div>
+
             <div class="footer-note">
-                <i class="fas fa-barcode"></i> LAVU-Artikelverwaltung · OÖ LAVU GmbH
+                <div class="office-status">
+                    <i class="fas fa-circle" style="font-size:0.6rem;"></i>
+                    <span id="officeStatusText">Verbunden mit Büro-PC</span>
+                </div>
+                <span><i class="fas fa-barcode"></i> LAVU-Artikel · OÖ LAVU GmbH</span>
             </div>
         </div>
     </div>
@@ -586,71 +717,67 @@
 
 <script>
     (function() {
-        // Die vollständigen Daten aus der Vorgabe mit zugewiesenen Standard-Containern
+        // ----- Material-Daten (LAVU) -----
         const materials = [
-            // Block 1000
-            { code: '1501', desc: 'Großmöbel (ReVital)', block: '1000', container: 'Container 30m³' },
-            { code: '1506', desc: 'Hausrat (ReVital)', block: '1000', container: 'Wechselbox' },
-            { code: '1510', desc: 'Elektro-Großgeräte für Wiederverwendung', block: '1000', container: 'Gitterbox' },
-            { code: '1511', desc: 'Elektro-Kleingeräte für Wiederverwendung', block: '1000', container: 'QR-Box' },
-            // Block 2000
-            { code: '2110', desc: 'Altpapier (Zeitungen, Illustrierte)', block: '2000', container: 'Papier-Presscontainer' },
-            { code: '2120', desc: 'Kartonagen (Wellpappe, Verpackungskarton)', block: '2000', container: 'Karton-Umleersystem' },
-            { code: '2210', desc: 'Verpackungsglas Weiß (Flachglas ausgenommen)', block: '2000', container: 'Glascontainer Weiß' },
-            { code: '2220', desc: 'Verpackungsglas Bunt', block: '2000', container: 'Glascontainer Bunt' },
-            { code: '2310', desc: 'Flachglas / Fensterglas', block: '2000', container: 'Flachglasgestell' },
-            { code: '2510', desc: 'PET-Flaschen transparent', block: '2000', container: 'Sammelsack / BigBag' },
-            { code: '2511', desc: 'PET-Flaschen bunt', block: '2000', container: 'Sammelsack / BigBag' },
-            { code: '2520', desc: 'Kunststoff-Hohlkörper (Kanister, Kübel > 5 Liter)', block: '2000', container: 'Container 10m³' },
-            { code: '2540', desc: 'PE-Folie transparent (LDPE-Verpackungsfolien)', block: '2000', container: 'Foliensack' },
-            { code: '2541', desc: 'PE-Folie bunt / Gewerbefolie', block: '2000', container: 'Foliensack' },
-            { code: '2550', desc: 'Getränkekartons (Milch-/Saftpackerl)', block: '2000', container: 'Sack 240L' },
-            { code: '2570', desc: 'Styropor (EPS) rein (Verpackungen)', block: '2000', container: 'EPS-Sack' },
-            { code: '2571', desc: 'Styropor (EPS) Baustelle (Dämmplatten, XPS)', block: '2000', container: 'Baustellen-Sack' },
-            { code: '2580', desc: 'Hartkunststoffe (Nicht-Verpackungen wie Spielzeug, Gartenmöbel)', block: '2000', container: 'Container 30m³' },
-            // Block 3000
-            { code: '3010', desc: 'Altholz stofflich (Kategorie A I / A II, unbehandelt, Paletten)', block: '3000', container: 'Altholz-Muldenschiff' },
-            { code: '3020', desc: 'Altholz thermisch (Kategorie A III, beschichtete Platten, Möbel)', block: '3000', container: 'Container 30m³' },
-            { code: '3030', desc: 'Altholz verunreinigt / imprägniert (Kategorie A IV, Außenholz, Zäune)', block: '3000', container: 'Sonder-Abdeckcontainer' },
-            { code: '3510', desc: 'Alteisen / Mischschrott', block: '3000', container: 'Schrottmulde' },
-            { code: '3520', desc: 'Kabelschrott (Kupfer-/Alukabel isoliert)', block: '3000', container: 'Gitterbox' },
-            { code: '3530', desc: 'Aluminium (Profile, Bleche)', block: '3000', container: 'Alu-Box' },
-            { code: '3540', desc: 'Buntmetalle (Kupfer, Messing, Armaturen)', block: '3000', container: 'Buntmetallbox 1m³' },
-            // Block 4000
-            { code: '4010', desc: 'Elektro-Großgeräte (Waschmaschinen, Herde)', block: '4000', container: 'Großgeräte-Palette' },
-            { code: '4020', desc: 'Kühl- und Klimageräte', block: '4000', container: 'Kühlgeräte-Ebene' },
-            { code: '4030', desc: 'Bildschirmgeräte (TV, Monitore)', block: '4000', container: 'Display-Gitterbox' },
-            { code: '4040', desc: 'Elektro-Kleingeräte (ohne Akkus, QR-Box)', block: '4000', container: 'QR-Sammelbox' },
-            { code: '4041', desc: 'Elektro-Kleingeräte mit fest verbauten Lithium-Akkus', block: '4000', container: 'Sicherheitsfass' },
-            { code: '4050', desc: 'Gasentladungslampen stabförmig (Leuchtstoffröhren)', block: '4000', container: 'Lampenbox Lang' },
-            { code: '4051', desc: 'Gasentladungslampen Sonderformen (LED, Energiesparlampen)', block: '4000', container: 'Lampenbox Klein' },
-            { code: '4110', desc: 'Gerätebatterien (Fass / Sammelbox)', block: '4000', container: 'Batteriefass' },
-            { code: '4120', desc: 'Lithium-Batterien / Akkus unbeschädigt', block: '4000', container: 'Sicherheitsbox Sand' },
-            { code: '4130', desc: 'Fahrzeugbatterien (KFZ-Starterbatterien)', block: '4000', container: 'Säurewanne' },
-            // Block 4300 / 4900
-            { code: '4310', desc: 'Altöl mineralisch (Motorenöl)', block: '4300', container: 'Öltank' },
-            { code: '4315', desc: 'Speiseöl / Altfett (Öli-System)', block: '4300', container: 'Öli-Palette' },
-            { code: '4320', desc: 'Dispersionsfarben (Wandfarben auf Wasserbasis)', block: '4300', container: 'Farbpalette' },
-            { code: '4325', desc: 'Lacke und Lösemittel (lösemittelhaltige Farben, Klebstoffe)', block: '4300', container: 'Problemstoffbox' },
-            { code: '4340', desc: 'Altmedikamente', block: '4300', container: 'Medikamentenbox' },
-            { code: '4350', desc: 'Spraydosen mit Restinhalt', block: '4300', container: 'Dosenfass' },
-            { code: '4385', desc: 'Mineralwolle / KMF (Annahme im staubdichten ASZ-Sammelsack)', block: '4300', container: 'KMF-Sack' },
-            { code: '4390', desc: 'Asbestzement / Eternit mix (Gefährlicher Abfall)', block: '4300', container: 'Eternit-BigBag' },
-            { code: '4963', desc: 'Kostenpflichtige Annahme Mineralwolle (Säcke inkl. Entsorgungsgebühr)', block: '4300', container: 'KMF-Sack Bezahlt' },
-            // Block 9000
-            { code: '9110', desc: 'Bauschutt rein (mineralisch: Ziegel, Beton, Fliesen)', block: '9000', container: 'Bauschuttmulde 5m³' },
-            { code: '9120', desc: 'Bauschutt sortiert / Leichtbaustoffe (Ytong, Rigips-Reste)', block: '9000', container: 'Leichtbaustoffmulde' },
-            { code: '9140', desc: 'Gipskartonplatten rein', block: '9000', container: 'Rigips-Container' },
-            { code: '9510', desc: 'Sperrmüll', block: '9000', container: 'Container 30m³ Open' },
-            { code: '9520', desc: 'Altreifen ohne Felge', block: '9000', container: 'Reifengitter' },
-            { code: '9521', desc: 'Altreifen mit Felge', block: '9000', container: 'Reifengitter' }
+            { code: '1501', desc: 'Großmöbel (ReVital)', block: '1000', container: 'Container 10m³' },
+            { code: '1506', desc: 'Hausrat (ReVital)', block: '1000', container: 'Container 10m³' },
+            { code: '1510', desc: 'Elektro-Großgeräte Wiederverwendung', block: '1000', container: 'Gitterbox' },
+            { code: '1511', desc: 'Elektro-Kleingeräte Wiederverwendung', block: '1000', container: 'QR-Box' },
+            { code: '2110', desc: 'Altpapier (Zeitungen, Illustrierte)', block: '2000', container: 'Papier-Container' },
+            { code: '2120', desc: 'Kartonagen (Wellpappe)', block: '2000', container: 'Container 10m³' },
+            { code: '2210', desc: 'Verpackungsglas Weiß', block: '2000', container: 'Glas-Container' },
+            { code: '2220', desc: 'Verpackungsglas Bunt', block: '2000', container: 'Glas-Container' },
+            { code: '2310', desc: 'Flachglas / Fensterglas', block: '2000', container: 'Container 5m³' },
+            { code: '2510', desc: 'PET-Flaschen transparent', block: '2000', container: 'Sack / BigBag' },
+            { code: '2511', desc: 'PET-Flaschen bunt', block: '2000', container: 'Sack / BigBag' },
+            { code: '2520', desc: 'Kunststoff-Hohlkörper (>5L)', block: '2000', container: 'Gitterbox' },
+            { code: '2540', desc: 'PE-Folie transparent (LDPE)', block: '2000', container: 'Sack' },
+            { code: '2541', desc: 'PE-Folie bunt / Gewerbefolie', block: '2000', container: 'Sack' },
+            { code: '2550', desc: 'Getränkekartons', block: '2000', container: 'Container 10m³' },
+            { code: '2570', desc: 'Styropor (EPS) rein', block: '2000', container: 'Sack' },
+            { code: '2571', desc: 'Styropor (EPS) Baustelle', block: '2000', container: 'Container' },
+            { code: '2580', desc: 'Hartkunststoffe (Spielzeug, Möbel)', block: '2000', container: 'Container 10m³' },
+            { code: '3010', desc: 'Altholz stofflich (A I / A II)', block: '3000', container: 'Container 10m³' },
+            { code: '3020', desc: 'Altholz thermisch (A III)', block: '3000', container: 'Container 10m³' },
+            { code: '3030', desc: 'Altholz verunreinigt / imprägniert', block: '3000', container: 'Container 10m³' },
+            { code: '3510', desc: 'Alteisen / Mischschrott', block: '3000', container: 'Container 5m³' },
+            { code: '3520', desc: 'Kabelschrott (Cu/Al isoliert)', block: '3000', container: 'Container' },
+            { code: '3530', desc: 'Aluminium (Profile, Bleche)', block: '3000', container: 'Container' },
+            { code: '3540', desc: 'Buntmetalle (Cu, Messing)', block: '3000', container: 'Container' },
+            { code: '4010', desc: 'Elektro-Großgeräte', block: '4000', container: 'Container 10m³' },
+            { code: '4020', desc: 'Kühl- und Klimageräte', block: '4000', container: 'Container' },
+            { code: '4030', desc: 'Bildschirmgeräte (TV, Monitore)', block: '4000', container: 'Container' },
+            { code: '4040', desc: 'Elektro-Kleingeräte (ohne Akku)', block: '4000', container: 'QR-Box' },
+            { code: '4041', desc: 'Kleingeräte mit Li-Akku', block: '4000', container: 'Sonderbox' },
+            { code: '4050', desc: 'Gasentladungslampen stabförmig', block: '4000', container: 'Sammelbox' },
+            { code: '4051', desc: 'Gasentladungslampen Sonderformen', block: '4000', container: 'Sammelbox' },
+            { code: '4110', desc: 'Gerätebatterien (Fass / Box)', block: '4000', container: 'Batterie-Fass' },
+            { code: '4120', desc: 'Lithium-Batterien / Akkus', block: '4000', container: 'Sonderbox' },
+            { code: '4130', desc: 'Fahrzeugbatterien', block: '4000', container: 'Batterie-Container' },
+            { code: '4310', desc: 'Altöl mineralisch', block: '4300', container: 'Kanister / Fass' },
+            { code: '4315', desc: 'Speiseöl / Altfett', block: '4300', container: 'Kanister' },
+            { code: '4320', desc: 'Dispersionsfarben (Wasserbasis)', block: '4300', container: 'Gebinde' },
+            { code: '4325', desc: 'Lacke und Lösemittel', block: '4300', container: 'Gebinde' },
+            { code: '4340', desc: 'Altmedikamente', block: '4300', container: 'Sammelbox' },
+            { code: '4350', desc: 'Spraydosen mit Restinhalt', block: '4300', container: 'Sonderbox' },
+            { code: '4385', desc: 'Mineralwolle / KMF (Sack)', block: '4300', container: 'ASZ-Sack' },
+            { code: '4390', desc: 'Asbestzement / Eternit mix', block: '4300', container: 'BigBag' },
+            { code: '4963', desc: 'kostenpfl. Mineralwolle (Sack)', block: '4300', container: 'ASZ-Sack' },
+            { code: '9110', desc: 'Bauschutt rein (Ziegel, Beton)', block: '9000', container: 'Container 10m³' },
+            { code: '9120', desc: 'Bauschutt sortiert / Ytong', block: '9000', container: 'Container 10m³' },
+            { code: '9140', desc: 'Gipskartonplatten rein', block: '9000', container: 'Container 10m³' },
+            { code: '9510', desc: 'Sperrmüll', block: '9000', container: 'Container 10m³' },
+            { code: '9520', desc: 'Altreifen ohne Felge', block: '9000', container: 'Reifen-Container' },
+            { code: '9521', desc: 'Altreifen mit Felge', block: '9000', container: 'Reifen-Container' },
         ];
 
-        // Versuche Zustand aus dem LocalStorage zu laden (für Echtzeit-Abgleich am Büro-PC)
-        let basket = JSON.parse(localStorage.getItem('asz_lavu_basket')) || [];
+        // ----- State -----
+        let basket = [];
         let activeBlock = 'all';
         let currentCardIndex = 0;
+        let reportHistory = [];
 
+        // ----- DOM Refs -----
         const materialListEl = document.getElementById('materialListContainer');
         const basketListEl = document.getElementById('basketListContainer');
         const basketCountEl = document.getElementById('basketCount');
@@ -660,20 +787,9 @@
         const cardPrevBtn = document.getElementById('cardPrevBtn');
         const cardNextBtn = document.getElementById('cardNextBtn');
         const searchInput = document.getElementById('materialSearch');
+        const officeStatusText = document.getElementById('officeStatusText');
 
-        // ----- Swipe / Drag State -----
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let isSwiping = false;
-        let isMouseDown = false;
-        let mouseDownX = 0;
-        let mouseDownY = 0;
-
-        function saveBasket() {
-            localStorage.setItem('asz_lavu_basket', JSON.stringify(basket));
-            window.dispatchEvent(new Event('storage'));
-        }
-
+        // ----- Rendering -----
         function renderMaterialList() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             let filtered = materials.filter(m => {
@@ -683,12 +799,10 @@
                 }
                 return true;
             });
-
             if (filtered.length === 0) {
-                materialListEl.innerHTML = `<div style="padding: 30px 16px; color: #4f6f83; text-align:center;">Keine Materialien im gewählten Block gefunden.</div>`;
+                materialListEl.innerHTML = `<div style="padding: 30px 16px; color: #5a8a9a; text-align:center;font-size:1.1rem;">Keine Materialien gefunden</div>`;
                 return;
             }
-
             let html = '';
             filtered.forEach(m => {
                 const inBasket = basket.some(b => b.code === m.code);
@@ -697,8 +811,8 @@
                         <span class="code">${m.code}</span>
                         <span class="desc">${m.desc}</span>
                         <span class="container-badge"><i class="fas fa-box"></i> ${m.container}</span>
-                        <button class="add-btn" data-code="${m.code}" ${inBasket ? 'disabled style="opacity:0.5; background:#bdc3c7; color:#7f8c8d;"' : ''}>
-                            <i class="fas fa-plus-circle"></i> ${inBasket ? 'Aktiv' : 'Hinzufügen'}
+                        <button class="add-btn" data-code="${m.code}" ${inBasket ? 'disabled' : ''}>
+                            <i class="fas fa-plus-circle"></i> ${inBasket ? 'im Korb' : 'hinzu'}
                         </button>
                     </div>
                 `;
@@ -706,15 +820,16 @@
             materialListEl.innerHTML = html;
 
             document.querySelectorAll('.add-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
                     const code = this.dataset.code;
                     const mat = materials.find(m => m.code === code);
                     if (mat && !basket.some(b => b.code === code)) {
                         basket.push({ ...mat });
                         currentCardIndex = basket.length - 1;
-                        saveBasket();
                         updateBasket();
                         renderMaterialList();
+                        // Office-Update
+                        sendToOffice('add', mat);
                     }
                 });
             });
@@ -722,7 +837,7 @@
 
         function updateBasket() {
             if (basket.length === 0) {
-                basketListEl.innerHTML = `<div style="padding: 24px 10px; color:#6a8aa0; text-align:center; font-style:italic;">Keine aktiven Frachtpositionen gemeldet.</div>`;
+                basketListEl.innerHTML = `<div style="padding: 24px 10px; color:#5a8a9a; text-align:center; font-style:italic;font-size:1rem;">Keine Frachtnummern</div>`;
             } else {
                 let html = '';
                 basket.forEach((item, idx) => {
@@ -739,11 +854,12 @@
                 document.querySelectorAll('.remove-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const idx = parseInt(this.dataset.index);
+                        const removed = basket[idx];
                         basket.splice(idx, 1);
                         if (currentCardIndex >= basket.length) currentCardIndex = Math.max(0, basket.length - 1);
-                        saveBasket();
                         updateBasket();
                         renderMaterialList();
+                        sendToOffice('remove', removed);
                     });
                 });
             }
@@ -753,7 +869,7 @@
 
         function renderCardStack() {
             if (basket.length === 0) {
-                cardStackContainer.innerHTML = `<div class="card-empty">Keine Karteikärtchen<br>Füge Materialien vom Terminal hinzu</div>`;
+                cardStackContainer.innerHTML = `<div class="card-empty">Keine Karteikärtchen<br>Füge Materialien hinzu</div>`;
                 cardDots.innerHTML = '';
                 cardCounter.textContent = '0 / 0';
                 cardPrevBtn.disabled = true;
@@ -773,6 +889,7 @@
                 if (idx === activeIdx) positionClass = 'active';
                 else if (idx === activeIdx - 1) positionClass = 'prev';
                 else if (idx === activeIdx + 1) positionClass = 'next';
+                else positionClass = 'hidden';
 
                 html += `
                     <div class="card-item ${positionClass}" data-index="${idx}">
@@ -780,23 +897,26 @@
                         <div class="card-site">ASZ Asten · 106</div>
                         <div><span class="card-code">${item.code}</span> · <span class="card-container">${item.container}</span></div>
                         <div class="card-desc">${item.desc}</div>
-                        <div class="card-select-hint"><i class="fas fa-hand-pointer"></i> Zum Fokussieren tippen</div>
+                        <div class="card-select-hint"><i class="fas fa-hand-pointer"></i> Zum Auswählen tippen</div>
                     </div>
                 `;
             });
             html += '</div>';
             cardStackContainer.innerHTML = html;
 
-            // Dot Indikatoren
+            // Dots
             let dotsHtml = '';
             for (let i = 0; i < total; i++) {
-                dotsHtml += `<button class="card-dot ${i === activeIdx ? 'active' : ''}" data-index="${i}"></button>`;
+                dotsHtml += `<button class="card-dot ${i === activeIdx ? 'active' : ''}" data-index="${i}" aria-label="Karte ${i+1}"></button>`;
             }
             cardDots.innerHTML = dotsHtml;
             document.querySelectorAll('.card-dot').forEach(dot => {
                 dot.addEventListener('click', function() {
-                    currentCardIndex = parseInt(this.dataset.index);
-                    renderCardStack();
+                    const idx = parseInt(this.dataset.index);
+                    if (idx !== currentCardIndex) {
+                        currentCardIndex = idx;
+                        renderCardStack();
+                    }
                 });
             });
 
@@ -805,7 +925,7 @@
             cardNextBtn.disabled = (activeIdx === total - 1);
 
             document.querySelectorAll('.card-item').forEach(card => {
-                card.addEventListener('click', function() {
+                card.addEventListener('click', function(e) {
                     const idx = parseInt(this.dataset.index);
                     if (idx !== currentCardIndex && idx >= 0 && idx < basket.length) {
                         currentCardIndex = idx;
@@ -817,29 +937,35 @@
             setupCardSwipe();
         }
 
-        // ----- Swipe / Touch & Mouse Drag Logik -----
+        // ----- Swipe -----
+        let touchStartX = 0, touchStartY = 0;
+        let isSwiping = false;
+
         function setupCardSwipe() {
             const container = cardStackContainer;
             if (!container) return;
 
+            container.removeEventListener('touchstart', handleTouchStart);
+            container.removeEventListener('touchmove', handleTouchMove);
+            container.removeEventListener('touchend', handleTouchEnd);
+
             container.addEventListener('touchstart', handleTouchStart, { passive: true });
             container.addEventListener('touchmove', handleTouchMove, { passive: false });
             container.addEventListener('touchend', handleTouchEnd, { passive: true });
-            container.addEventListener('mousedown', handleMouseDown);
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
         }
 
         function handleTouchStart(e) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
             isSwiping = false;
         }
 
         function handleTouchMove(e) {
             if (touchStartX === 0) return;
-            const deltaX = e.touches[0].clientX - touchStartX;
-            const deltaY = e.touches[0].clientY - touchStartY;
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
             if (Math.abs(deltaX) > 15 && Math.abs(deltaX) > Math.abs(deltaY) * 0.7) {
                 isSwiping = true;
                 e.preventDefault();
@@ -853,49 +979,15 @@
         }
 
         function handleTouchEnd(e) {
-            if (!isSwiping || touchStartX === 0) { touchStartX = 0; return; }
-            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            if (!isSwiping || touchStartX === 0) {
+                touchStartX = 0;
+                resetCardTransform();
+                return;
+            }
+            const touch = e.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
             touchStartX = 0;
             isSwiping = false;
-
-            resetCardTransform();
-
-            if (deltaX < -50 && currentCardIndex < basket.length - 1) {
-                currentCardIndex++;
-                renderCardStack();
-            } else if (deltaX > 50 && currentCardIndex > 0) {
-                currentCardIndex--;
-                renderCardStack();
-            }
-        }
-
-        function handleMouseDown(e) {
-            if (basket.length === 0) return;
-            mouseDownX = e.clientX;
-            mouseDownY = e.clientY;
-            isMouseDown = true;
-        }
-
-        function handleMouseMove(e) {
-            if (!isMouseDown || mouseDownX === 0) return;
-            const deltaX = e.clientX - mouseDownX;
-            const deltaY = e.clientY - mouseDownY;
-            if (Math.abs(deltaX) > 15 && Math.abs(deltaX) > Math.abs(deltaY) * 0.7) {
-                const activeCard = document.querySelector('.card-item.active');
-                if (activeCard) {
-                    const clamped = Math.max(-80, Math.min(80, deltaX));
-                    activeCard.style.transform = `translateX(${clamped}px) scale(1) rotate(${clamped * 0.02}deg)`;
-                    activeCard.style.transition = 'none';
-                }
-            }
-        }
-
-        function handleMouseUp(e) {
-            if (!isMouseDown) return;
-            const deltaX = e.clientX - mouseDownX;
-            mouseDownX = 0;
-            isMouseDown = false;
-
             resetCardTransform();
 
             if (deltaX < -50 && currentCardIndex < basket.length - 1) {
@@ -912,38 +1004,100 @@
             if (activeCard) {
                 activeCard.style.transition = 'transform 0.3s cubic-bezier(0.23, 1, 0.32, 1)';
                 activeCard.style.transform = '';
+                setTimeout(() => { if (activeCard) activeCard.style.transition = ''; }, 350);
             }
         }
 
-        // ----- Event Listeners -----
+        // ----- Navigation -----
         cardPrevBtn.addEventListener('click', function() {
             if (currentCardIndex > 0) { currentCardIndex--; renderCardStack(); }
         });
-
         cardNextBtn.addEventListener('click', function() {
             if (currentCardIndex < basket.length - 1) { currentCardIndex++; renderCardStack(); }
         });
 
+        document.addEventListener('keydown', function(e) {
+            if (basket.length === 0) return;
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'ArrowLeft' && currentCardIndex > 0) {
+                e.preventDefault(); currentCardIndex--; renderCardStack();
+            } else if (e.key === 'ArrowRight' && currentCardIndex < basket.length - 1) {
+                e.preventDefault(); currentCardIndex++; renderCardStack();
+            }
+        });
+
+        // ----- Office-Reporting (simuliert) -----
+        function sendToOffice(action, item) {
+            const timestamp = new Date().toLocaleTimeString('de-DE');
+            const entry = {
+                timestamp,
+                action,
+                item,
+                basketCount: basket.length,
+                basketItems: basket.map(i => ({ code: i.code, desc: i.desc, container: i.container }))
+            };
+            reportHistory.push(entry);
+            // Status aktualisieren
+            officeStatusText.textContent = `Letzte Aktion: ${action} · ${item.code} · ${timestamp}`;
+            // In einer echten Umgebung würde hier ein POST an den Office-Server erfolgen
+            console.log('[Office-Report]', entry);
+        }
+
+        // ----- Report an Büro-PC (Button) -----
+        document.getElementById('reportToOfficeBtn').addEventListener('click', function() {
+            if (basket.length === 0) {
+                officeStatusText.textContent = '⚠️ Keine Fracht zum Senden';
+                setTimeout(() => {
+                    officeStatusText.textContent = 'Verbunden mit Büro-PC';
+                }, 2000);
+                return;
+            }
+            const report = {
+                timestamp: new Date().toISOString(),
+                site: 'ASZ Asten · 106',
+                terminal: 'Terminal-01',
+                items: basket.map(i => ({ code: i.code, desc: i.desc, container: i.container })),
+                total: basket.length
+            };
+            // Simuliere Senden an Büro-PC
+            officeStatusText.textContent = '📤 Sende an Büro-PC ...';
+            setTimeout(() => {
+                officeStatusText.textContent = `✅ Gesendet: ${basket.length} Artikel an Büro-PC (${new Date().toLocaleTimeString('de-DE')})`;
+                console.log('[Office-PC] Vollständiger Report:', JSON.stringify(report, null, 2));
+                // In Produktion: fetch('/api/report', { method: 'POST', body: JSON.stringify(report) })
+            }, 800);
+        });
+
+        // ----- Clear & Sample -----
         document.getElementById('clearBasketBtn').addEventListener('click', function() {
+            if (basket.length === 0) return;
+            const oldBasket = [...basket];
             basket = [];
             currentCardIndex = 0;
-            saveBasket();
             updateBasket();
             renderMaterialList();
+            sendToOffice('clear_all', { count: oldBasket.length });
         });
 
         document.getElementById('addSampleBtn').addEventListener('click', function() {
-            const sampleCodes = ['1511', '2120', '3510', '4041', '4325', '9110'];
+            const sampleCodes = ['2110', '2120', '4050'];
+            let added = 0;
             sampleCodes.forEach(code => {
                 const mat = materials.find(m => m.code === code);
-                if (mat && !basket.some(b => b.code === code)) { basket.push({ ...mat }); }
+                if (mat && !basket.some(b => b.code === code)) {
+                    basket.push({ ...mat });
+                    added++;
+                }
             });
-            currentCardIndex = basket.length - 1;
-            saveBasket();
-            updateBasket();
-            renderMaterialList();
+            if (added > 0) {
+                currentCardIndex = basket.length - 1;
+                updateBasket();
+                renderMaterialList();
+                sendToOffice('add_sample', { count: added });
+            }
         });
 
+        // ----- Block Filter -----
         document.querySelectorAll('.block-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.block-btn').forEach(b => b.classList.remove('active'));
@@ -953,75 +1107,18 @@
             });
         });
 
+        // ----- Search -----
         searchInput.addEventListener('input', renderMaterialList);
 
-        // Echtzeit Datensynchronisation über mehrere separate Tabs/Monitore hinweg
-        window.addEventListener('storage', () => {
-            basket = JSON.parse(localStorage.getItem('asz_lavu_basket')) || [];
-            updateBasket();
-            renderMaterialList();
-        });
-
-        // ----- DRUCK-LOGIK FÜR DIE ETIKETTEN (BÜRO-DRUCKER) -----
-        document.getElementById('printLabelBtn').addEventListener('click', function() {
-            if (basket.length === 0) {
-                alert('Die Frachtliste ist leer. Keine Etiketten zu drucken.');
-                return;
-            }
-
-            let labelsHtml = '';
-            basket.forEach(item => {
-                labelsHtml += `
-                    <div class="single-label">
-                        <div class="line1">ASZ Asten · Standort 106</div>
-                        <div class="item-line">${item.code} · ${item.container}</div>
-                        <div class="desc-line">${item.desc}</div>
-                    </div>
-                `;
-            });
-
-            const printWindow = window.open('', '_blank', 'width=500,height=450');
-            if (!printWindow) {
-                alert('Bitte Popups erlauben, um die Etiketten zu drucken.');
-                return;
-            }
-
-            printWindow.document.write(`
-                <html><head><title>LAVU Frachtlabels - ASZ Asten</title>
-                <style>
-                    body { font-family: 'Courier New', monospace; padding: 20px; background: white; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-                    .single-label { 
-                        border: 3px solid #003b57; 
-                        padding: 20px; 
-                        border-radius: 16px; 
-                        width: 400px; 
-                        text-align: right; 
-                        background: white;
-                        page-break-after: always;
-                    }
-                    .single-label .line1 { font-size: 1.2rem; font-weight: 700; color: #003b57; border-bottom: 1px solid #ccc; padding-bottom: 6px; margin-bottom: 8px; }
-                    .single-label .item-line { font-size: 1.3rem; font-weight: 700; margin-top: 4px; }
-                    .single-label .desc-line { font-size: 1rem; margin-top: 6px; text-align: left; direction: ltr; }
-                    .footer { font-size: 0.75rem; color: #2d5770; text-align: center; width: 400px; margin-top: 10px; }
-                    @media print {
-                        body { padding: 0; gap: 0; }
-                        .single-label { border-color: #000; page-break-after: always; }
-                    }
-                </style></head><body>
-                    ${labelsHtml}
-                    <div class="footer">LAVU-Artikelverwaltung · OÖ LAVU GmbH</div>
-                    <script>
-                        window.print();
-                        setTimeout(() => window.close(), 1000);
-                    <\/script>
-                </body></html>
-            `);
-            printWindow.document.close();
-        });
-
-        // Erst-Initialisierung beim Start
+        // ----- Initial Render -----
         renderMaterialList();
         updateBasket();
+        renderCardStack();
+
+        // Office-Status Initialisierung
+        setTimeout(() => {
+            officeStatusText.textContent = 'Verbunden mit Büro-PC';
+        }, 500);
     })();
 </script>
 </body>
