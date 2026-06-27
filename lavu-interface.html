@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ASZ Asten · LAVU Fracht-Interface</title>
     <!-- Font Awesome Icons (free) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -31,7 +31,6 @@
             padding: 28px 30px 34px;
             transition: all 0.2s;
         }
-        /* header */
         .header {
             display: flex;
             flex-wrap: wrap;
@@ -321,7 +320,12 @@
             position: relative;
             margin: 14px 0 6px;
             height: 200px;
-            perspective: 800px;
+            perspective: 1000px;
+            touch-action: pan-y;
+            cursor: grab;
+        }
+        .card-stack-container:active {
+            cursor: grabbing;
         }
         .card-stack {
             position: relative;
@@ -335,44 +339,45 @@
             width: 100%;
             height: 100%;
             background: #fafcfd;
-            border: 2px solid #8ba6be;
-            border-radius: 16px;
-            padding: 16px 20px;
+            border: 2.5px solid #8ba6be;
+            border-radius: 18px;
+            padding: 18px 22px;
             font-family: 'Courier New', monospace;
             font-size: 0.85rem;
-            line-height: 1.7;
+            line-height: 1.8;
             color: #002b3f;
             text-align: right;
-            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease, box-shadow 0.3s ease;
             backface-visibility: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            cursor: grab;
             user-select: none;
-            touch-action: pan-y;
+            -webkit-user-select: none;
+            will-change: transform;
         }
         .card-item.active {
             transform: translateX(0) scale(1) rotate(0deg);
             opacity: 1;
             z-index: 10;
-            box-shadow: 0 8px 25px rgba(0,43,63,0.18);
+            box-shadow: 0 12px 35px rgba(0,43,63,0.2);
+            border-color: #1f5d7a;
         }
         .card-item.prev {
-            transform: translateX(-30px) scale(0.92) rotate(-2deg);
-            opacity: 0.5;
+            transform: translateX(-45px) scale(0.88) rotate(-3deg);
+            opacity: 0.4;
             z-index: 5;
             filter: blur(0.5px);
         }
         .card-item.next {
-            transform: translateX(30px) scale(0.92) rotate(2deg);
-            opacity: 0.5;
+            transform: translateX(45px) scale(0.88) rotate(3deg);
+            opacity: 0.4;
             z-index: 5;
             filter: blur(0.5px);
         }
         .card-item.hidden {
-            transform: translateX(60px) scale(0.85) rotate(4deg);
+            transform: translateX(80px) scale(0.8) rotate(5deg);
             opacity: 0;
             z-index: 0;
             pointer-events: none;
@@ -381,12 +386,12 @@
             font-weight: 700;
             font-size: 1.1rem;
             color: #003b57;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         .card-item .card-code {
             font-weight: 700;
             color: #004466;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
         .card-item .card-container {
             font-weight: 600;
@@ -397,11 +402,28 @@
         }
         .card-item .card-index {
             position: absolute;
-            top: 8px;
-            left: 14px;
+            top: 10px;
+            left: 16px;
             font-size: 0.7rem;
             color: #8ba6be;
             font-weight: 600;
+            background: rgba(255,255,255,0.7);
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+        .card-item .card-select-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: #8ba6be;
+            opacity: 0.6;
+            background: rgba(255,255,255,0.6);
+            padding: 2px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+            pointer-events: none;
         }
         .card-nav {
             display: flex;
@@ -415,7 +437,7 @@
             background: #e6edf6;
             border: none;
             border-radius: 40px;
-            padding: 6px 18px;
+            padding: 6px 20px;
             font-weight: 600;
             color: #1f4c61;
             cursor: pointer;
@@ -423,22 +445,27 @@
             font-size: 0.9rem;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
         .card-nav button:hover:not(:disabled) {
             background: #b2cbdf;
             color: #002b40;
+            transform: scale(1.02);
         }
         .card-nav button:disabled {
             opacity: 0.3;
             cursor: not-allowed;
+            transform: none;
         }
         .card-nav .counter {
-            font-weight: 600;
+            font-weight: 700;
             color: #1f4c61;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             min-width: 60px;
             text-align: center;
+            background: #eef4fa;
+            padding: 4px 12px;
+            border-radius: 30px;
         }
         .card-empty {
             text-align: center;
@@ -449,6 +476,38 @@
             border-radius: 16px;
             border: 2px dashed #8ba6be;
             font-family: 'Courier New', monospace;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Dot-Indikatoren für freie Auswahl */
+        .card-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+            padding: 4px 0;
+        }
+        .card-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d0dce9;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+        .card-dot.active {
+            background: #1f5d7a;
+            transform: scale(1.25);
+            box-shadow: 0 2px 8px rgba(31,93,122,0.3);
+        }
+        .card-dot:hover:not(.active) {
+            background: #b0c4d8;
+            transform: scale(1.1);
         }
 
         .footer-note {
@@ -463,8 +522,8 @@
             .card { padding: 18px; }
             .container-grid { flex-direction: column; }
             .material-panel { min-width: 0; }
+            .card-item { padding: 14px 16px; font-size: 0.8rem; }
         }
-        /* scrollbar style */
         .material-list::-webkit-scrollbar, .basket-list::-webkit-scrollbar {
             width: 5px;
         }
@@ -476,7 +535,6 @@
 </head>
 <body>
 <div class="card" id="app">
-    <!-- Header -->
     <div class="header">
         <div class="site-id">
             <h1>ASZ Asten</h1>
@@ -485,9 +543,7 @@
         <button class="print-btn" id="printLabelBtn"><i class="fas fa-print"></i> Alle drucken</button>
     </div>
 
-    <!-- Main Grid -->
     <div class="container-grid">
-        <!-- linke Seite: Materialien -->
         <div class="material-panel">
             <div class="filter-bar">
                 <input type="text" id="materialSearch" placeholder="🔍 Suchen (Code / Name) ...">
@@ -502,25 +558,21 @@
                     <button class="block-btn" data-block="9000">9000</button>
                 </div>
             </div>
-            <div class="material-list" id="materialListContainer">
-                <!-- dynamisch gefüllt -->
-            </div>
+            <div class="material-list" id="materialListContainer"></div>
         </div>
 
-        <!-- rechte Seite: Warenkorb / Karteikärtchen -->
         <div class="basket-panel">
             <div class="basket-header">
                 <h3><i class="fas fa-shopping-basket"></i> Frachtliste - Entsorgung</h3>
                 <span id="basketCount">0</span>
             </div>
-            <div class="basket-list" id="basketListContainer">
-                <!-- dynamisch -->
+            <div class="basket-list" id="basketListContainer"></div>
+
+            <div class="card-stack-container" id="cardStackContainer">
+                <div class="card-empty">Keine Karteikärtchen<br>Füge Materialien hinzu</div>
             </div>
 
-            <!-- Karteikärtchen Stack -->
-            <div id="cardStackContainer" class="card-stack-container">
-                <!-- dynamisch befüllt -->
-            </div>
+            <div class="card-dots" id="cardDots"></div>
 
             <div class="card-nav">
                 <button id="cardPrevBtn" disabled><i class="fas fa-chevron-left"></i> Zurück</button>
@@ -541,14 +593,11 @@
 
 <script>
     (function() {
-        // ----- MATERIAL DATASET (LAVU article numbers + container types) -----
         const materials = [
-            // Block 1000
             { code: '1501', desc: 'Großmöbel (ReVital)', block: '1000', container: 'Container 10m³' },
             { code: '1506', desc: 'Hausrat (ReVital)', block: '1000', container: 'Container 10m³' },
             { code: '1510', desc: 'Elektro-Großgeräte Wiederverwendung', block: '1000', container: 'Gitterbox' },
             { code: '1511', desc: 'Elektro-Kleingeräte Wiederverwendung', block: '1000', container: 'QR-Box' },
-            // Block 2000
             { code: '2110', desc: 'Altpapier (Zeitungen, Illustrierte)', block: '2000', container: 'Papier-Container' },
             { code: '2120', desc: 'Kartonagen (Wellpappe)', block: '2000', container: 'Container 10m³' },
             { code: '2210', desc: 'Verpackungsglas Weiß', block: '2000', container: 'Glas-Container' },
@@ -563,7 +612,6 @@
             { code: '2570', desc: 'Styropor (EPS) rein', block: '2000', container: 'Sack' },
             { code: '2571', desc: 'Styropor (EPS) Baustelle', block: '2000', container: 'Container' },
             { code: '2580', desc: 'Hartkunststoffe (Spielzeug, Möbel)', block: '2000', container: 'Container 10m³' },
-            // Block 3000
             { code: '3010', desc: 'Altholz stofflich (A I / A II)', block: '3000', container: 'Container 10m³' },
             { code: '3020', desc: 'Altholz thermisch (A III)', block: '3000', container: 'Container 10m³' },
             { code: '3030', desc: 'Altholz verunreinigt / imprägniert', block: '3000', container: 'Container 10m³' },
@@ -571,7 +619,6 @@
             { code: '3520', desc: 'Kabelschrott (Cu/Al isoliert)', block: '3000', container: 'Container' },
             { code: '3530', desc: 'Aluminium (Profile, Bleche)', block: '3000', container: 'Container' },
             { code: '3540', desc: 'Buntmetalle (Cu, Messing)', block: '3000', container: 'Container' },
-            // Block 4000
             { code: '4010', desc: 'Elektro-Großgeräte', block: '4000', container: 'Container 10m³' },
             { code: '4020', desc: 'Kühl- und Klimageräte', block: '4000', container: 'Container' },
             { code: '4030', desc: 'Bildschirmgeräte (TV, Monitore)', block: '4000', container: 'Container' },
@@ -582,7 +629,6 @@
             { code: '4110', desc: 'Gerätebatterien (Fass / Box)', block: '4000', container: 'Batterie-Fass' },
             { code: '4120', desc: 'Lithium-Batterien / Akkus', block: '4000', container: 'Sonderbox' },
             { code: '4130', desc: 'Fahrzeugbatterien', block: '4000', container: 'Batterie-Container' },
-            // Block 4300/4900
             { code: '4310', desc: 'Altöl mineralisch', block: '4300', container: 'Kanister / Fass' },
             { code: '4315', desc: 'Speiseöl / Altfett', block: '4300', container: 'Kanister' },
             { code: '4320', desc: 'Dispersionsfarben (Wasserbasis)', block: '4300', container: 'Gebinde' },
@@ -592,7 +638,6 @@
             { code: '4385', desc: 'Mineralwolle / KMF (Sack)', block: '4300', container: 'ASZ-Sack' },
             { code: '4390', desc: 'Asbestzement / Eternit mix', block: '4300', container: 'BigBag' },
             { code: '4963', desc: 'kostenpfl. Mineralwolle (Sack)', block: '4300', container: 'ASZ-Sack' },
-            // Block 9000
             { code: '9110', desc: 'Bauschutt rein (Ziegel, Beton)', block: '9000', container: 'Container 10m³' },
             { code: '9120', desc: 'Bauschutt sortiert / Ytong', block: '9000', container: 'Container 10m³' },
             { code: '9140', desc: 'Gipskartonplatten rein', block: '9000', container: 'Container 10m³' },
@@ -601,22 +646,29 @@
             { code: '9521', desc: 'Altreifen mit Felge', block: '9000', container: 'Reifen-Container' },
         ];
 
-        // ----- state -----
         let basket = [];
         let activeBlock = 'all';
         let currentCardIndex = 0;
 
-        // DOM refs
         const materialListEl = document.getElementById('materialListContainer');
         const basketListEl = document.getElementById('basketListContainer');
         const basketCountEl = document.getElementById('basketCount');
         const cardStackContainer = document.getElementById('cardStackContainer');
+        const cardDots = document.getElementById('cardDots');
         const cardCounter = document.getElementById('cardCounter');
         const cardPrevBtn = document.getElementById('cardPrevBtn');
         const cardNextBtn = document.getElementById('cardNextBtn');
         const searchInput = document.getElementById('materialSearch');
 
-        // ----- render functions -----
+        // ----- Swipe State -----
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isSwiping = false;
+        let currentTranslateX = 0;
+        let isDragging = false;
+        let startDraggingX = 0;
+        let dragOffset = 0;
+
         function renderMaterialList() {
             const searchTerm = searchInput.value.toLowerCase().trim();
             let filtered = materials.filter(m => {
@@ -652,6 +704,7 @@
                     const mat = materials.find(m => m.code === code);
                     if (mat && !basket.some(b => b.code === code)) {
                         basket.push({ ...mat });
+                        currentCardIndex = basket.length - 1;
                         updateBasket();
                         renderMaterialList();
                     }
@@ -660,7 +713,6 @@
         }
 
         function updateBasket() {
-            // Basket list
             if (basket.length === 0) {
                 basketListEl.innerHTML = `<div style="padding: 24px 10px; color:#6a8aa0; text-align:center; font-style:italic;">Keine Frachtnummern</div>`;
             } else {
@@ -693,13 +745,13 @@
         function renderCardStack() {
             if (basket.length === 0) {
                 cardStackContainer.innerHTML = `<div class="card-empty">Keine Karteikärtchen<br>Füge Materialien hinzu</div>`;
+                cardDots.innerHTML = '';
                 cardCounter.textContent = '0 / 0';
                 cardPrevBtn.disabled = true;
                 cardNextBtn.disabled = true;
                 return;
             }
 
-            // Stelle sicher, dass currentCardIndex im gültigen Bereich liegt
             if (currentCardIndex >= basket.length) currentCardIndex = basket.length - 1;
             if (currentCardIndex < 0) currentCardIndex = 0;
 
@@ -712,7 +764,6 @@
                 if (idx === activeIdx) positionClass = 'active';
                 else if (idx === activeIdx - 1) positionClass = 'prev';
                 else if (idx === activeIdx + 1) positionClass = 'next';
-                // Für weiter entfernte Karten: hidden
                 else positionClass = 'hidden';
 
                 html += `
@@ -721,38 +772,66 @@
                         <div class="card-site">ASZ Asten · 106</div>
                         <div><span class="card-code">${item.code}</span> · <span class="card-container">${item.container}</span></div>
                         <div class="card-desc">${item.desc}</div>
+                        <div class="card-select-hint"><i class="fas fa-hand-pointer"></i> Zum Auswählen tippen</div>
                     </div>
                 `;
             });
             html += '</div>';
             cardStackContainer.innerHTML = html;
 
-            // Counter und Buttons
+            // Dots
+            let dotsHtml = '';
+            for (let i = 0; i < total; i++) {
+                dotsHtml += `<button class="card-dot ${i === activeIdx ? 'active' : ''}" data-index="${i}" aria-label="Karte ${i+1}"></button>`;
+            }
+            cardDots.innerHTML = dotsHtml;
+            document.querySelectorAll('.card-dot').forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    if (idx !== currentCardIndex) {
+                        currentCardIndex = idx;
+                        renderCardStack();
+                    }
+                });
+            });
+
             cardCounter.textContent = `${activeIdx + 1} / ${total}`;
             cardPrevBtn.disabled = (activeIdx === 0);
             cardNextBtn.disabled = (activeIdx === total - 1);
 
-            // Swipe- und Touch-Unterstützung
+            // Klick auf Karte zum Springen (freie Auswahl)
+            document.querySelectorAll('.card-item').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    const idx = parseInt(this.dataset.index);
+                    if (idx !== currentCardIndex && idx >= 0 && idx < basket.length) {
+                        currentCardIndex = idx;
+                        renderCardStack();
+                    }
+                });
+            });
+
             setupCardSwipe();
         }
 
-        // ----- Swipe / Touch Unterstützung -----
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let isSwiping = false;
-
+        // ----- Swipe / Touch Unterstützung mit Live-Drag -----
         function setupCardSwipe() {
             const container = cardStackContainer;
             if (!container) return;
 
-            // Entferne alte Listener (durch Clonen vermeiden)
             container.removeEventListener('touchstart', handleTouchStart);
             container.removeEventListener('touchmove', handleTouchMove);
             container.removeEventListener('touchend', handleTouchEnd);
+            container.removeEventListener('mousedown', handleMouseDown);
+            container.removeEventListener('mousemove', handleMouseMove);
+            container.removeEventListener('mouseup', handleMouseUp);
+            container.removeEventListener('mouseleave', handleMouseUp);
 
             container.addEventListener('touchstart', handleTouchStart, { passive: true });
-            container.addEventListener('touchmove', handleTouchMove, { passive: true });
+            container.addEventListener('touchmove', handleTouchMove, { passive: false });
             container.addEventListener('touchend', handleTouchEnd, { passive: true });
+            container.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
         }
 
         function handleTouchStart(e) {
@@ -760,6 +839,8 @@
             touchStartX = touch.clientX;
             touchStartY = touch.clientY;
             isSwiping = false;
+            isDragging = false;
+            dragOffset = 0;
         }
 
         function handleTouchMove(e) {
@@ -767,34 +848,106 @@
             const touch = e.touches[0];
             const deltaX = touch.clientX - touchStartX;
             const deltaY = touch.clientY - touchStartY;
-            if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > Math.abs(deltaY) * 0.8) {
+            if (Math.abs(deltaX) > 15 && Math.abs(deltaX) > Math.abs(deltaY) * 0.7) {
                 isSwiping = true;
+                isDragging = true;
+                dragOffset = deltaX;
                 e.preventDefault();
+                // Live-Transform für besseres Feedback
+                const activeCard = document.querySelector('.card-item.active');
+                if (activeCard) {
+                    const clamped = Math.max(-80, Math.min(80, deltaX));
+                    activeCard.style.transform = `translateX(${clamped}px) scale(1) rotate(${clamped * 0.02}deg)`;
+                    activeCard.style.transition = 'none';
+                }
             }
         }
 
         function handleTouchEnd(e) {
             if (!isSwiping || touchStartX === 0) {
                 touchStartX = 0;
+                resetCardTransform();
                 return;
             }
             const touch = e.changedTouches[0];
             const deltaX = touch.clientX - touchStartX;
             touchStartX = 0;
             isSwiping = false;
+            isDragging = false;
 
-            if (deltaX < -40) {
-                // Swipe links → nächste Karte
+            resetCardTransform();
+
+            if (deltaX < -50) {
                 if (currentCardIndex < basket.length - 1) {
                     currentCardIndex++;
                     renderCardStack();
                 }
-            } else if (deltaX > 40) {
-                // Swipe rechts → vorherige Karte
+            } else if (deltaX > 50) {
                 if (currentCardIndex > 0) {
                     currentCardIndex--;
                     renderCardStack();
                 }
+            }
+        }
+
+        // Mouse Support für Desktop
+        let mouseDownX = 0;
+        let mouseDownY = 0;
+        let isMouseDown = false;
+
+        function handleMouseDown(e) {
+            if (basket.length === 0) return;
+            mouseDownX = e.clientX;
+            mouseDownY = e.clientY;
+            isMouseDown = true;
+            isDragging = false;
+            dragOffset = 0;
+        }
+
+        function handleMouseMove(e) {
+            if (!isMouseDown || mouseDownX === 0) return;
+            const deltaX = e.clientX - mouseDownX;
+            const deltaY = e.clientY - mouseDownY;
+            if (Math.abs(deltaX) > 15 && Math.abs(deltaX) > Math.abs(deltaY) * 0.7) {
+                isDragging = true;
+                dragOffset = deltaX;
+                const activeCard = document.querySelector('.card-item.active');
+                if (activeCard) {
+                    const clamped = Math.max(-80, Math.min(80, deltaX));
+                    activeCard.style.transform = `translateX(${clamped}px) scale(1) rotate(${clamped * 0.02}deg)`;
+                    activeCard.style.transition = 'none';
+                }
+            }
+        }
+
+        function handleMouseUp(e) {
+            if (!isMouseDown) return;
+            const deltaX = e.clientX - mouseDownX;
+            mouseDownX = 0;
+            isMouseDown = false;
+            isDragging = false;
+
+            resetCardTransform();
+
+            if (Math.abs(deltaX) > 50) {
+                if (deltaX < -50 && currentCardIndex < basket.length - 1) {
+                    currentCardIndex++;
+                    renderCardStack();
+                } else if (deltaX > 50 && currentCardIndex > 0) {
+                    currentCardIndex--;
+                    renderCardStack();
+                }
+            }
+        }
+
+        function resetCardTransform() {
+            const activeCard = document.querySelector('.card-item.active');
+            if (activeCard) {
+                activeCard.style.transition = 'transform 0.3s cubic-bezier(0.23, 1, 0.32, 1)';
+                activeCard.style.transform = '';
+                setTimeout(() => {
+                    if (activeCard) activeCard.style.transition = '';
+                }, 350);
             }
         }
 
@@ -816,6 +969,8 @@
         // ----- Tastatur Pfeile -----
         document.addEventListener('keydown', function(e) {
             if (basket.length === 0) return;
+            const target = e.target;
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 if (currentCardIndex > 0) {
